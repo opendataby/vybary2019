@@ -6,6 +6,7 @@
 - firstName - имя
 - middleName - отчество
 - sex - пол (М для мужского, F для женского)
+- alreadyInParliament - является депутатом шестого созыва (1 - да, 0 - нет)
 - birthDate - год рождения
 - jobTitle - должность
 - party - партийность
