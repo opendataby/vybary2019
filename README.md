@@ -4,5 +4,11 @@
 
 2019.11.10
 
-- проект на гитхабе, maintenance гитхаб - настройка команды @opendata/datafolks
+- проект на гитхабе, maintenance команд на гитхаб и настройка команды @opendata/datafolks
+- иконка @opendata/datafolks из случайного скриншота
 - тикет в пандас https://github.com/pandas-dev/pandas/issues/29528
+
+### Credits
+
+@Alexanderexe
+@abitrolly
