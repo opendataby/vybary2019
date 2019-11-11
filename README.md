@@ -16,7 +16,7 @@ d.iloc[:,0] = d.iloc[:,0].apply(lambda x: x[:8]+' '+x[8:])
 ### План
 
 * [ ] таблица кандидаты
-* [ ] таблица регионы
+* [x] таблица регионы
 * [ ] всё остальное
 
 ### ChangeLog
@@ -25,6 +25,8 @@ d.iloc[:,0] = d.iloc[:,0].apply(lambda x: x[:8]+' '+x[8:])
 
 - независимо собранный excel от @dmitryrogozhny с доп.информацией - пол и является ли
   текущим депутатом
+- скрипт `./go.sh` для сборки датасета
+- собранные скриптами данные теперь в [`,/dataset`](dataset) (пока только [`regions.csv`](dataset/regions.csv))
 
 2019.11.10 (за 7 дней до..)
 
@@ -32,7 +34,7 @@ d.iloc[:,0] = d.iloc[:,0].apply(lambda x: x[:8]+' '+x[8:])
 - иконка @opendata/datafolks из случайного скриншота
 - тикет в пандас https://github.com/pandas-dev/pandas/issues/29528
 - `parse.ipynb` парсинг данных кандидата на pandas + BeautifulSoup (@Alexanderexe)
-- `regions.csv` спиcок регионов с сайта (@abitrolly)
+- `dataset/regions.csv` спиcок регионов с сайта (@abitrolly)
 
 ### Credits
 

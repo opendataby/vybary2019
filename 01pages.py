@@ -4,6 +4,7 @@
 Cкрейпинг/парсинг http://vybary2019.by на чистом Python без зависимостей.
 """
 
+import csv
 import os
 import re
 import sys
@@ -13,10 +14,13 @@ from urllib.request import urlopen
 URL = 'http://vybary2019.by'
 
 
-def rewrite(filename, content):
+def write_csv(filename, data, header):
     with open(filename, 'w', encoding='utf-8') as fd:
-        fd.write(content)
-        print('saved %s' % fd.name)
+        print('writing %s' % fd.name)
+        writer = csv.writer(fd, dialect='unix')
+        writer.writerow(header)
+        for row in data:
+            writer.writerow(row)
 
 
 def get_page(url, cachefile, force=False):
@@ -61,9 +65,6 @@ def parse_regions(content):
   reregion = re.compile('href="(/regions/(\d+).html)">([^<]+)<')
   return [[number, name, URL+path] for path, number, name in reregion.findall(content)]
 
-def get_token(content):
-  return re.findall('_token"\s+value="(\w+)"', content)[0]
-
 
 if __name__ == '__main__':
     force = False
@@ -72,8 +73,9 @@ if __name__ == '__main__':
 
     content, cookie = get_page(URL + 'regions.html', '01regions_cache', force)
 
-    for number, name, url in parse_regions(content):
-       print(f"{number}, {name}, {url}")
+    # number, name, url
+    regions = parse_regions(content)
+    write_csv('dataset/regions.csv', regions, 'number name url'.split())
 
     '''
     # next step is fetch, which needs token, laravel_session cookie
