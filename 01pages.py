@@ -58,6 +58,7 @@ def calc_months(curdate):
       date[0] += 1
   return res
 
+
 def parse_regions(content):
   reregion = re.compile('href="(/regions/(\d+).html)">([^<]+)<')
   return [[number, name, URL+path] for path, number, name in reregion.findall(content)]
@@ -69,11 +70,16 @@ if __name__ == '__main__':
         force = True
 
     # directories cache/ and dataset/ needs to be present
+
     content = get_page(URL + '/regions.html', 'cache/regions.html', force)
 
     # number, name, url
     regions = parse_regions(content)
     write_csv('dataset/regions.csv', regions, 'number name url'.split())
+
+    for number, name, url in regions:
+        content = get_page(url, f'cache/region{number}.html', force)
+
 
     '''
     # next step is fetch, which needs token, laravel_session cookie
