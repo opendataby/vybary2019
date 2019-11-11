@@ -59,9 +59,17 @@ def calc_months(curdate):
   return res
 
 
-def parse_regions(content):
+def parse_region_list(content):
   reregion = re.compile('href="(/regions/(\d+).html)">([^<]+)<')
   return [[number, name, URL+path] for path, number, name in reregion.findall(content)]
+
+
+def parse_region_data(content):
+  reppl = re.compile('Количество избирателей</strong>([^<]+)<')
+  ppl = reppl.findall(content)[0]  # get first (and the only) match
+  # strip all markup from ' – 65 522.\n'
+  ppl = ppl.replace(' ', '').strip('\n.–')
+  return ppl
 
 
 if __name__ == '__main__':
@@ -74,12 +82,18 @@ if __name__ == '__main__':
     content = get_page(URL + '/regions.html', 'cache/regions.html', force)
 
     # number, name, url
-    regions = parse_regions(content)
-    write_csv('dataset/regions.csv', regions, 'number name url'.split())
+    regions = parse_region_list(content)
+    header = 'number name url'.split()
 
-    for number, name, url in regions:
+    for idx, (number, name, url) in enumerate(regions):
         content = get_page(url, f'cache/region{number}.html', force)
+        ppl = parse_region_data(content)
+        # insert people field after the name
+        nameidx = header.index('name')
+        regions[idx].insert(nameidx+1, ppl)
+    header.insert(nameidx+1, 'people')
 
+    write_csv('dataset/regions.csv', regions, header)
 
     '''
     # next step is fetch, which needs token, laravel_session cookie
