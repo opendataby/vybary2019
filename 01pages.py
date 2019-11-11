@@ -28,19 +28,16 @@ def get_page(url, cachefile, force=False):
     Fetch page and cookie from URL if local cachefile does not exist
     """
     if os.path.exists(cachefile) and not force:
-        #print('using cached ' + cachefile + ' (-f to force update)')
+        print('using cached ' + cachefile + ' (-f to force update)')
         with open(cachefile, encoding='utf-8') as fc:
-            cookie = fc.readline().strip()
-            return fc.read(), cookie
+            return fc.read()
     else:
         req = urlopen(url)
         output = req.read().decode('utf-8')
-        for line in str(req.headers).splitlines():
-            if line.startswith('Set-Cookie'):
-                cookie = line.split(': ', 1)[1]
-                output = cookie+'\n'+output
-        rewrite(cachefile, output)
-        return output, cookie
+        print(f'caching {url} to {cachefile}')
+        with open(cachefile, 'w', encoding='utf-8') as cw:
+            cw.write(output)
+        return output
 
 
 def get_months(content):
@@ -71,7 +68,8 @@ if __name__ == '__main__':
     if '-f' in sys.argv:
         force = True
 
-    content, cookie = get_page(URL + 'regions.html', '01regions_cache', force)
+    # directories cache/ and dataset/ needs to be present
+    content = get_page(URL + '/regions.html', 'cache/regions.html', force)
 
     # number, name, url
     regions = parse_regions(content)
