@@ -66,10 +66,16 @@ def parse_region_list(content):
 
 def parse_region_data(content):
   reppl = re.compile('Количество избирателей</strong>([^<]+)<')
+  reloc = re.compile('тельной комиссии</strong>([^<]+)<')
+
   ppl = reppl.findall(content)[0]  # get first (and the only) match
   # strip all markup from ' – 65 522.\n'
   ppl = ppl.replace(' ', '').strip('\n.–')
-  return ppl
+
+  loc = reloc.findall(content)[0]
+  loc = loc.replace('\n', ' ').strip('\n:. ')
+
+  return ppl, loc
 
 
 if __name__ == '__main__':
@@ -87,11 +93,13 @@ if __name__ == '__main__':
 
     for idx, (number, name, url) in enumerate(regions):
         content = get_page(url, f'cache/region{number}.html', force)
-        ppl = parse_region_data(content)
+        ppl, loc = parse_region_data(content)
         # insert people field after the name
         nameidx = header.index('name')
         regions[idx].insert(nameidx+1, ppl)
+        regions[idx].insert(nameidx+2, loc)
     header.insert(nameidx+1, 'people')
+    header.insert(nameidx+2, 'location')
 
     write_csv('dataset/regions.csv', regions, header)
 
