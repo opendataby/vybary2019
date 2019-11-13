@@ -21,7 +21,7 @@
 ```
 python3 01pages.py -f
 ```
-Для обновления candidates_info.csv нужен как минимум [Jupyter](https://jupyter.org/).
+Для обновления dataset/candidates.csv нужен как минимум [Jupyter](https://jupyter.org/).
 ```
 jupyter nbconvert --execute parse.ipynb
 ```
@@ -47,6 +47,7 @@ d.iloc[:,0] = d.iloc[:,0].apply(lambda x: x[:8]+' '+x[8:])
 
 - за два дня с 10:39 11го ноября выбыло 5 кандидатов
 - инструкции по обновлению датасета
+- CSV с кандидатами уехала в dataset/candidates.csv
 
 2019.11.12 (осталось 5)
 
