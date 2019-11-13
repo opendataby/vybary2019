@@ -29,15 +29,15 @@ def get_page(url, cachefile, force=False):
     """
     if os.path.exists(cachefile) and not force:
         print('using cached ' + cachefile + ' (-f to force update)')
-        with open(cachefile, encoding='utf-8') as fc:
-            return fc.read()
+        with open(cachefile, 'rb') as fc:
+            return fc.read().decode('utf-8')
     else:
         req = urlopen(url)
-        output = req.read().decode('utf-8')
+        output = req.read()
         print(f'caching {url} to {cachefile}')
-        with open(cachefile, 'w', encoding='utf-8') as cw:
+        with open(cachefile, 'wb') as cw:
             cw.write(output)
-        return output
+        return output.decode('utf-8')
 
 
 def get_months(content):
@@ -70,10 +70,10 @@ def parse_region_data(content):
 
   ppl = reppl.findall(content)[0]  # get first (and the only) match
   # strip all markup from ' – 65 522.\n'
-  ppl = ppl.replace(' ', '').strip('\n.–')
+  ppl = ppl.replace(' ', '').strip('\r\n.–')
 
   loc = reloc.findall(content)[0]
-  loc = loc.replace('\n', ' ').strip('\n:. ')
+  loc = loc.replace('\r\n', ' ').strip('\r\n:. ')
 
   return ppl, loc
 
