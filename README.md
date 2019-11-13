@@ -51,6 +51,7 @@ d.iloc[:,0] = d.iloc[:,0].apply(lambda x: x[:8]+' '+x[8:])
 - инструкции по обновлению датасета
 - CSV с кандидатами уехала в dataset/candidates.csv
 - [canal01-generations.ipynb](canal01-generations.ipynb) - анализ поколений кандидатов
+- заработали предсказания на 2019ый http://ushchent.github.io/el_machina/
 
 2019.11.12 (осталось 5)
 
