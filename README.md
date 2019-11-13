@@ -48,6 +48,7 @@ d.iloc[:,0] = d.iloc[:,0].apply(lambda x: x[:8]+' '+x[8:])
 - за два дня с 10:39 11го ноября выбыло 5 кандидатов
 - инструкции по обновлению датасета
 - CSV с кандидатами уехала в dataset/candidates.csv
+- [canal01-generations.ipynb](canal01-generations.ipynb) - анализ поколений кандидатов
 
 2019.11.12 (осталось 5)
 
