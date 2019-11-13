@@ -40,25 +40,6 @@ def get_page(url, cachefile, force=False):
         return output.decode('utf-8')
 
 
-def get_months(content):
-  """ Get (parse) list of months from content """
-  remonth = re.compile('name="month-filter" value="(\d\d\d\d-\d\d-\d\d)"')
-  return remonth.findall(content)
-
-def calc_months(curdate):
-  """ Calculate months up to curdate from hardcoded date """
-  hardcoded = '2015-11-01'
-  date = [int(i) for i in hardcoded.split('-')]
-  res = []
-  while date <= [int(i) for i in curdate.split('-')]:
-    res.append('{:04d}-{:02d}-{:02d}'.format(*date))
-    y, date[1] = divmod(date[1]+1, 13)
-    if y:
-      date[1] = 1
-      date[0] += 1
-  return res
-
-
 def parse_region_list(content):
   reregion = re.compile('href="(/regions/(\d+).html)">([^<]+)<')
   return [[number, name, URL+path] for path, number, name in reregion.findall(content)]
@@ -68,18 +49,22 @@ def parse_region_data(content):
   reppl = re.compile('Количество избирателей</strong>([^<]+)<')
   reloc = re.compile('тельной комиссии</strong>([^<]+)<')
   recon = re.compile('Контакты:</strong>([^<]+)<')
+  rebor = re.compile('region-border">(.+?)</p>', re.DOTALL)
 
   ppl = reppl.findall(content)[0]  # get first (and the only) match
   # strip all markup from ' – 65 522.\n'
   ppl = ppl.replace(' ', '').strip('\r\n.–')
 
   loc = reloc.findall(content)[0]
-  loc = loc.replace('\r\n', ' ').strip('\r\n:. ')
+  loc = loc.replace('\r\n', ' ').strip('\r\n\t:. ')
 
   con = recon.findall(content)[0]
   con = re.sub('\s+', ' ', con).strip()
 
-  return ppl, loc, con
+  bor = rebor.findall(content)[0]
+  bor = re.sub('\s+', ' ', bor).strip()
+
+  return ppl, loc, con, bor
 
 
 if __name__ == '__main__':
@@ -97,22 +82,17 @@ if __name__ == '__main__':
 
     for idx, (number, name, url) in enumerate(regions):
         content = get_page(url, f'cache/region{number}.html', force)
-        ppl, loc, con = parse_region_data(content)
+        ppl, loc, con, border = parse_region_data(content)
         # insert people field after the name
         nameidx = header.index('name')
         regions[idx].insert(nameidx+1, ppl)
         regions[idx].insert(nameidx+2, loc)
         regions[idx].insert(nameidx+3, con)
+        regions[idx].append(border)
     header.insert(nameidx+1, 'people')
     header.insert(nameidx+2, 'location')
     header.insert(nameidx+3, 'contact')
+    header.append('border')
 
     write_csv('dataset/regions.csv', regions, header)
 
-    '''
-    # next step is fetch, which needs token, laravel_session cookie
-    # and list of months
-    token = get_token(content)
-    # list of months includes current (incomplete) month
-    rewrite('002-in-creds.txt', cookie+'\n'+token+'\n'+'\n'.join(months))
-    '''
