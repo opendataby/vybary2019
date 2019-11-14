@@ -49,7 +49,7 @@ def parse_region_data(content):
   reppl = re.compile('Количество избирателей</strong>([^<]+)<')
   reloc = re.compile('тельной комиссии</strong>([^<]+)<')
   recon = re.compile('Контакты:</strong>([^<]+)<')
-  rebor = re.compile('region-border">(.+?)</p>', re.DOTALL)
+  rebor = re.compile('region-border">(.+?)</(?:p|div)>', re.DOTALL)
 
   ppl = reppl.findall(content)[0]  # get first (and the only) match
   # strip all markup from ' – 65 522.\n'
